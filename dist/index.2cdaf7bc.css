@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#body {
+  overflow: hidden;
+}
+
+#canvas {
+  display: block;
+}
+
+/*# sourceMappingURL=index.2cdaf7bc.css.map */

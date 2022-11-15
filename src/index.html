@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画板</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <canvas id="canvas" width="100" height="100"></canvas>
+        <script>
+            var canvas = document.getElementById("canvas");
+            canvas.width = document.documentElement.clientWidth;
+            canvas.height = document.documentElement.clientHeight;
+            
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = "black";
+            ctx.strokeStyle = 'none';
+            ctx.lineWidth = 4;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = "round"
+            
+            let pen = () => {
+                let painting = false;
+    
+                var isTouchDevice = 'ontouchstart' in 
+                document.documentElement;
+                if(isTouchDevice){
+                    canvas.ontouchmove = (e) => {
+                    ctx.beginPath();
+                    ctx.arc(e.touches[0].clientX, e.touches[0].clientY, 10, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.fill();
+                    }
+                }else{
+                    canvas.onmousedown = (e) => {
+                    ctx.beginPath();
+                    ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.fill();
+                    painting = true;
+                    }
+                    canvas.onmouseup = () => {
+                        painting = false;
+                    }
+                    canvas.onmousemove = (e) => {
+                        if(painting === true){
+                        ctx.beginPath();
+                        ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                        ctx.stroke();
+                        ctx.fill();
+                        }
+                    }
+                }
+            }
+            
+            let line = () =>{
+                function line(x1,y1,x2,y2){
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+                
+                var isTouchDevice = 'ontouchstart' in 
+                document.documentElement;
+                if(isTouchDevice){
+                    canvas.ontouchstart = (e) => {
+                        let x = e.touches[0].clientX
+                        let y = e.touches[0].clientY
+                        last = [x, y]
+                    }
+                    canvas.ontouchmove = (e) => {
+                        let x = e.touches[0].clientX
+                        let y = e.touches[0].clientY
+                        line(last[0], last[1], x, y)
+                        last = [x, y]
+                    }
+                }else{
+
+                    canvas.onmousedown = (e) => {
+                        painting = true
+                        last = [e.clientX, e.clientY];
+                    }
+
+                    canvas.onmouseup = () => {
+                        painting = false
+                    }
+
+                    canvas.onmousemove = (e) => {
+                        if(painting === true){
+                            line(last[0],last[1],e.clientX,e.clientY);
+                            last = [e.clientX,e.clientY]
+                        }
+                    }
+                }
+                
+                let painting = false;
+                
+                var isTouchDevice = 'ontouchstart' in 
+                document.documentElement;
+
+            } 
+            line();
+        </script>
+</body>
+</html>
